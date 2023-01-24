@@ -193,7 +193,7 @@ void PhysicsList::ConstructProcess()
 #endif
   
   // Beam Reaction
-//  AddReaction();
+  AddReaction();
 
   // Decay Process
   //
@@ -289,7 +289,7 @@ void PhysicsList::AddPhysicsList(const G4String& name)
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-/*
+
 #include "G4PhysicsListHelper.hh"
 #include "Reaction.hh"
 #include "G4StepLimiter.hh"
@@ -311,7 +311,7 @@ void PhysicsList::AddReaction()
     ph->RegisterProcess(new G4StepLimiter, particle);
   }
 }
-*/
+
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 #include "G4PhysicsListHelper.hh"
@@ -402,7 +402,7 @@ void PhysicsList::AddRadioactiveDecay()
 
 #include "G4Material.hh"
 
-/*void PhysicsList::GetRange(G4double val)
+void PhysicsList::GetRange(G4double val)
 {
   //  G4LogicalVolume* lBox = fDet->GetWorld()->GetLogicalVolume();
   G4LogicalVolume* lBox = fDet->HallLog();
@@ -419,7 +419,7 @@ void PhysicsList::AddRadioactiveDecay()
   G4cout << "energy   : " << G4BestUnit(val,"Energy") << G4endl;
   G4cout << "range    : " << G4BestUnit(cut,"Length") << G4endl;
 }
-*/
+
 void PhysicsList::SetGammaAngularCorrelations(bool val){
   G4NuclearLevelData::GetInstance()->GetParameters()->SetCorrelatedGamma(val);
   G4cout<<"Set correlated gamma "<<val<<G4endl;

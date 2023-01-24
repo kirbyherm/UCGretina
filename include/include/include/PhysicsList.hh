@@ -69,7 +69,7 @@ public:
 #endif
 
   void SetOutgoingBeam(Outgoing_Beam *BO) {BeamOut = BO;}
-//  void AddReaction();
+  void AddReaction();
 
   void AddPhysicsList(const G4String& name);
     
@@ -77,7 +77,7 @@ public:
   void AddRadioactiveDecay();
   void AddStepMax();
 
-//  void GetRange(G4double);
+  void GetRange(G4double);
 
   void SetGammaAngularCorrelations(bool);
 

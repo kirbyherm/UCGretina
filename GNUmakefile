@@ -5,7 +5,7 @@
 
 # Need this for writing output files larger than 2GB on 32-bit Linux
 # (untested on other systems)
-CPPFLAGS := -D_FILE_OFFSET_BITS=64
+CPPFLAGS := -D_FILE_OFFSET_BITS=64 -std=c++17 -Wno-shadow
 
 # Use -D to define LHTARGET, AD, SCANNING, NEUTRONS macros
 # for the C preprocesssor
@@ -26,7 +26,7 @@ ifdef SCANNING
   name := UCGretina_Scan
   CPPFLAGS  += -DSCANNING
 else
-  name := UCGretina
+  name := sunShare_Calib
 endif
 endif
 
@@ -62,9 +62,20 @@ CPPFLAGS += -DG4V496
 ## uncomment for geant v. 4.10
 ###########################################
 CPPFLAGS += -DG4V10
+##ROOT stuff:
+CPPFLAGS += `root-config --cflags --libs`
+CPPFLAGS += -g -ggdb -O0 -Wno-unused-variable           
+
+LDFLAGS := `root-config --glibs`
 
 G4TARGET := $(name)
 G4EXLIB := true
+
+ifndef G4LISTS_BASE                                                                                                                                                                           
+  EXTRALIBS += -L$(G4LIB)/plists/$(G4SYSTEM)
+  G4LISTS_BASE = $(G4INSTALL)/physics_lists
+
+endif
 
 ifndef G4INSTALL
   G4INSTALL = ../../..

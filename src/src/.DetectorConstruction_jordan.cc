@@ -41,8 +41,6 @@
 #include "G4ios.hh"
 #include <stdio.h>
 
-using namespace CLHEP;
-
 DetectorConstruction::DetectorConstruction()
   : NaI(0), Al(0), N78O21Ar1(0), Cr20Ni8Fe76(0), C2F4(0), Si(0), Cu3Zn2(0), SiO2(0), elCu(0), C2H3Cl(0), vacuum(0), cardboard(0), plastic(0)
 {
@@ -245,14 +243,13 @@ G4VPhysicalVolume* DetectorConstruction::ConstructDetector()
 
 //..........EXPERIMENTAL ROOM............
   G4Tubs* room_tube = new G4Tubs("room", 0.0*cm, 100.0*cm, 300.0*cm, 0.0*deg, 360.0*deg);
-  G4LogicalVolume* room_log = new G4LogicalVolume(room_tube,N78O21Ar1,"room",0,0,0);
-//  G4LogicalVolume* room_log = new G4LogicalVolume(room_tube,vacuum,"room",0,0,0);
+  G4LogicalVolume* room_log = new G4LogicalVolume(room_tube,vacuum,"room",0,0,0);
   G4VPhysicalVolume* room_phys = new G4PVPlacement(0,G4ThreeVector(0.0*cm,0.0*cm,0.0*cm),"room",room_log,NULL,false,0);
 
 
 //..........BEAM PIPE................
   G4double outerR_beam = 20.6375*mm;                   //edit this to change the radius of the beam pipe
-  G4double innerR_beam = outerR_beam-0.889*mm-0.0*mm;      //edit this to change the thickness of the beam pipe
+  G4double innerR_beam = outerR_beam-0.889*mm;      //edit this to change the thickness of the beam pipe
   G4double halflength_beam = 341.0*mm;              //edit this to change the length of the beam pipe
   G4double startAngle_beam = 0.*deg;
   G4double spanAngle_beam = 360.*deg;
@@ -261,7 +258,7 @@ G4VPhysicalVolume* DetectorConstruction::ConstructDetector()
 
   G4LogicalVolume* beam_log = new G4LogicalVolume(beam_tube,Al,"beam_log",0,0,0);
 
-  G4VPhysicalVolume* beam_phys = new G4PVPlacement(0,G4ThreeVector(0.0*mm,0.0*mm,0.0*mm),beam_log,"beam_phys",room_log,false,0);
+  G4VPhysicalVolume* beam_phys = new G4PVPlacement(0,G4ThreeVector(0.0*mm,0.0*mm,100.0*mm),beam_log,"beam_phys",room_log,false,0);
 
 
 //.........DIMENSIONS OF SuN..........           **(changing these will scale the whole simulation)**
@@ -416,7 +413,7 @@ for (int i=1; i<=4; i++)
 
 // **************************************************************************************************
 
-/*
+
 //____________THE SILICON VETO DETECTOR_____________________________
 
 
@@ -651,7 +648,7 @@ for (int i=1; i<=4; i++)
 
 
 
-*/
+
 
 
 // CARDBOARD = cardboard in front of our alpha and beta sources to hold them...a samll part of the source was covered by cardboard and betas can make through so I am putting it in
@@ -674,7 +671,7 @@ for (int i=1; i<=4; i++)
 
   
     G4double z_disp = 4.0*mm;
-/*
+
   G4VPhysicalVolume* pcbFrame_phys = new G4PVPlacement(0, G4ThreeVector(0.0*mm, 0.0*mm, z_disp), pcbFrame_log, "pcbFrame_phys", room_log, false, 0);
 
   G4VPhysicalVolume* pcbEdge1_phys = new G4PVPlacement(0, G4ThreeVector(0.0*mm, -halfheight_waferwhole-halfheight_pcbEdge1, z_disp), pcbEdge1_log, "pcbEdge1_phys", room_log, false, 0);
@@ -685,13 +682,13 @@ for (int i=1; i<=4; i++)
 
  
   G4VPhysicalVolume* dssd_phys = new G4PVPlacement(0, G4ThreeVector(0.0*mm, 0.0*mm, z_disp), dssd_log, "dssd_phys", room_log, false, 0);
-*/
-  G4VPhysicalVolume* cardboard_phys = new G4PVPlacement(0, G4ThreeVector(0.0*mm, 0.0*mm, -10*mm), cardboard_log, "cardboard_phys", room_log, false, 0);
+
+  G4VPhysicalVolume* cardboard_phys = new G4PVPlacement(0, G4ThreeVector(0.0*mm, 0.0*mm, 0.1*mm), cardboard_log, "cardboard_phys", room_log, false, 0);
  
 
-//  detectorName[8] = "dssd_phys";
+  detectorName[8] = "dssd_phys";
 
-/*
+
   G4VPhysicalVolume* plastic_phys = new G4PVPlacement(0, G4ThreeVector(0.0*mm, 0.0*mm, z_disp+19.2*mm), plastic_log, "plastic_phys", room_log, false, 0); 
 
   
@@ -703,84 +700,84 @@ for (int i=1; i<=4; i++)
 
   G4VPhysicalVolume* si_phys = new G4PVPlacement(0, G4ThreeVector(0.0*mm, 0.0*mm,z_disp+19.2*mm-halflength_plasticWhole+length_brassIndent+halflength_si), si_log, "si_phys", room_log, false, 0);
 
-*/
+
  
 
 
   
-////========================== Visualization attributes =========================================//
-//
-//  room_log->SetVisAttributes (G4VisAttributes::Invisible);
-//
-////visualization for scintillators = GREEN
-//  G4VisAttributes *GreenAttr = new G4VisAttributes(G4Colour(0.,1.,0.));     
-//  GreenAttr->SetVisibility(true);
-//  GreenAttr->SetForceSolid(true);
-//
-////visualization for reflector = PURPLE
-//  G4VisAttributes *PurpleAttr = new G4VisAttributes(G4Colour(1.,0.,1.));  
-//  PurpleAttr->SetVisibility(true);
-//  PurpleAttr->SetForceSolid(true);
-//
-////visualization for aluminum = GREY
-//  G4VisAttributes *GreyAttr = new G4VisAttributes(G4Colour(0.5,0.5,0.5));
-//  GreyAttr->SetVisibility(true);
-//  GreyAttr->SetForceSolid(true);
-//
-////visualization for BLUE
-//  G4VisAttributes *BlueAttr = new G4VisAttributes(G4Colour(0.,0.,1.));
-//  BlueAttr->SetVisibility(true);
-//  BlueAttr->SetForceSolid(true);
-//
-//// *********************************************************************************************** Edited to include colors for the silicon detector
-//
-////visualization for brass = YELLOW
-//  G4VisAttributes *YellowAttr = new G4VisAttributes(G4Colour(1.0, 1.0, 0.0));
-//  YellowAttr->SetVisibility(true);
-//  YellowAttr->SetForceSolid(true);
-//
-////visualization for palstic = DIFFERENT GREY
-//  G4VisAttributes *difGreyAttr = new G4VisAttributes(G4Colour(0.5, 0.6, 0.6));
-//  difGreyAttr->SetVisibility(true);
-//  difGreyAttr->SetForceSolid(true);
-//
-////visualization for silicon veto and DSSD CYAN
-//  G4VisAttributes *CyanAttr = new G4VisAttributes(G4Colour(0.0 ,1.0 ,1.0));
-//  CyanAttr->SetVisibility(true);
-//  CyanAttr->SetForceSolid(true);
-//
-//// visualization for PCB board = RED
-//  G4VisAttributes *RedAttr = new G4VisAttributes(G4Colour(1.0, 0.0, 0.0));
-//  RedAttr->SetVisibility(true);
-//  RedAttr->SetForceSolid(true);
-//
-//// applying the color scheme
-//
-//  //scint_log->SetVisAttributes(GreenAttr);
-//  //refl_log->SetVisAttributes(PurpleAttr);
-//  //al_log->SetVisAttributes(GreyAttr);
-//  //al_log_side->SetVisAttributes(GreyAttr);
-//  //beam_log->SetVisAttributes(BlueAttr);
-//
-//  //holder_log->SetVisAttributes(GreyAttr);
-//  //pipe_log->SetVisAttributes(GreyAttr);
-//  //end_log->SetVisAttributes(GreyAttr);
-//  //endcap_log->SetVisAttributes(GreyAttr);
-//
-//  // ******************************************************************************************** Edited to include visualization for the silicon detector
-//  
-//  si_log->SetVisAttributes(CyanAttr);
-//  brass_log->SetVisAttributes(YellowAttr);
-//
-//
-//   plastic_log->SetVisAttributes(difGreyAttr);
-//   dssd_log->SetVisAttributes(CyanAttr);
-//
-//   pcbFrame_log->SetVisAttributes(RedAttr);
-//    pcbEdge1_log->SetVisAttributes(RedAttr);
-//     pcbEdge2_log->SetVisAttributes(RedAttr);
-//
-//  wafer_log->SetVisAttributes(YellowAttr);
+//========================== Visualization attributes =========================================//
+
+  room_log->SetVisAttributes (G4VisAttributes::Invisible);
+
+//visualization for scintillators = GREEN
+  G4VisAttributes *GreenAttr = new G4VisAttributes(G4Colour(0.,1.,0.));     
+  GreenAttr->SetVisibility(true);
+  GreenAttr->SetForceSolid(true);
+
+//visualization for reflector = PURPLE
+  G4VisAttributes *PurpleAttr = new G4VisAttributes(G4Colour(1.,0.,1.));  
+  PurpleAttr->SetVisibility(true);
+  PurpleAttr->SetForceSolid(true);
+
+//visualization for aluminum = GREY
+  G4VisAttributes *GreyAttr = new G4VisAttributes(G4Colour(0.5,0.5,0.5));
+  GreyAttr->SetVisibility(true);
+  GreyAttr->SetForceSolid(true);
+
+//visualization for BLUE
+  G4VisAttributes *BlueAttr = new G4VisAttributes(G4Colour(0.,0.,1.));
+  BlueAttr->SetVisibility(true);
+  BlueAttr->SetForceSolid(true);
+
+// *********************************************************************************************** Edited to include colors for the silicon detector
+
+//visualization for brass = YELLOW
+  G4VisAttributes *YellowAttr = new G4VisAttributes(G4Colour(1.0, 1.0, 0.0));
+  YellowAttr->SetVisibility(true);
+  YellowAttr->SetForceSolid(true);
+
+//visualization for palstic = DIFFERENT GREY
+  G4VisAttributes *difGreyAttr = new G4VisAttributes(G4Colour(0.5, 0.6, 0.6));
+  difGreyAttr->SetVisibility(true);
+  difGreyAttr->SetForceSolid(true);
+
+//visualization for silicon veto and DSSD CYAN
+  G4VisAttributes *CyanAttr = new G4VisAttributes(G4Colour(0.0 ,1.0 ,1.0));
+  CyanAttr->SetVisibility(true);
+  CyanAttr->SetForceSolid(true);
+
+// visualization for PCB board = RED
+  G4VisAttributes *RedAttr = new G4VisAttributes(G4Colour(1.0, 0.0, 0.0));
+  RedAttr->SetVisibility(true);
+  RedAttr->SetForceSolid(true);
+
+// applying the color scheme
+
+  //scint_log->SetVisAttributes(GreenAttr);
+  //refl_log->SetVisAttributes(PurpleAttr);
+  //al_log->SetVisAttributes(GreyAttr);
+  //al_log_side->SetVisAttributes(GreyAttr);
+  //beam_log->SetVisAttributes(BlueAttr);
+
+  //holder_log->SetVisAttributes(GreyAttr);
+  //pipe_log->SetVisAttributes(GreyAttr);
+  //end_log->SetVisAttributes(GreyAttr);
+  //endcap_log->SetVisAttributes(GreyAttr);
+
+  // ******************************************************************************************** Edited to include visualization for the silicon detector
+  
+  si_log->SetVisAttributes(CyanAttr);
+  brass_log->SetVisAttributes(YellowAttr);
+
+
+   plastic_log->SetVisAttributes(difGreyAttr);
+   dssd_log->SetVisAttributes(CyanAttr);
+
+   pcbFrame_log->SetVisAttributes(RedAttr);
+    pcbEdge1_log->SetVisAttributes(RedAttr);
+     pcbEdge2_log->SetVisAttributes(RedAttr);
+
+  wafer_log->SetVisAttributes(YellowAttr);
   
 //   cardboard_log->SetVisAttributes(RedAttr);
   //hex_log->SetVisAttributes(difGreyAttr);

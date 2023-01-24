@@ -1,134 +1,101 @@
+///////////////////////////////////////////////////////////////////////////////////
+// Description: This file tells the program what to do before and after running. //
+//   For now the program does the following:                                     //
+//                                                                               //
+//   BEFORE: - Creates the ROOT tree and branches                                //
+//                                                                               //
+//   AFTER:  - Write the data to the ROOT tree                                   //
+//                                                                               //
+///////////////////////////////////////////////////////////////////////////////////
+
 #include "RunAction.hh"
 
-#include "G4Timer.hh"
-extern G4Timer Timer;
+#include "G4Run.hh"
+#include "G4UImanager.hh"
+#include "G4VVisManager.hh"
+#include "G4ios.hh"
+#include "G4String.hh"
 
-RunAction::RunAction(DetectorConstruction* detector, Incoming_Beam* BI,EventAction* ev): myDetector(detector), BeamIn(BI), evaction(ev)
+#include <stdio.h>
+#include <sstream>
+#include <iostream>
+#include "globals.hh"
+
+RunAction::RunAction()
 {
-  
+  runIDcounter = 0;
 }
 
 
 RunAction::~RunAction()
+{}
+
+
+void RunAction::BeginOfRunAction(const G4Run* aRun)
 {
+  ((G4Run *)(aRun))->SetRunID(runIDcounter++);
 
-}
+  G4cout << "Run " << aRun->GetRunID() << " start." << G4endl;
 
-void RunAction::BeginOfRunAction(const G4Run* run)
-{
+  srand(time(0));
 
-  G4cout<<" Beginning of run "<<G4endl;
+  //creates the file and tree for the .root output
+  //newfile = new TFile("rootFiles/trial.root","recreate");
+  //t = new TTree("t","output from geant");
 
-  evaction->SetNTotalevents(run->GetNumberOfEventToBeProcessed());
-  if(run->GetNumberOfEventToBeProcessed() > 1000000)
-    evaction->SetEveryNEvents(10000);
-  else if(run->GetNumberOfEventToBeProcessed() > 1000)
-    evaction->SetEveryNEvents(1000);
-  else if(run->GetNumberOfEventToBeProcessed() > 100)
-    evaction->SetEveryNEvents(100);
-  else
-    evaction->SetEveryNEvents(1);
+  G4String branchName;
+  G4String branchNameD;
 
-  G4cout << " Simulating " << run->GetNumberOfEventToBeProcessed()
-	 << " events." << G4endl;
-
-  if(BeamIn->getKE()>0)
-    evaction->SetInBeam(true);
-  
-  if(evaction->EvOut())
-    G4cout << " Writing ASCII output to " 
-	   << evaction->GetOutFileName() << G4endl;
-  if(evaction->Mode2Out())
-    G4cout << " Writing Mode 2 output to " 
-	   << evaction->GetMode2FileName() << G4endl;
-
-  Timer.Start();
-}
-
-
+  for(int i=0; i<nDetectors; i++)
+   {
+     branchName="ene"+detectorName[i];
+     branchNameD="ene"+detectorName[i]+"/D";
  
-void RunAction::EndOfRunAction(const G4Run*)
-{
-  if(evaction->EvOut())
-    evaction->closeEvfile();
-  if(evaction->Mode2Out())
-    evaction->closeMode2file();
+     ebranch = t->Branch(branchName,&energy[i],branchNameD);
+   }
 
-  Timer.Stop();
+   ebranch = t->Branch("eneAll",&energy_tot,"eneAll/D");
+   ebranch = t->Branch("multi",&mult,"multi/I");
 
-  G4cout << "                                                     " << G4endl;
+   ebranch = t->Branch("electron_energy_mc2",&electronKE_mc2,"electron_energy_mc2/D");
+   ebranch = t->Branch("electron_energy_keV",&electronKE_keV,"electron_energy_keV/D");
+   
+   ebranch = t->Branch("x",&x,"x/D");
+   ebranch = t->Branch("y",&y,"y/D");
+   ebranch = t->Branch("z",&z,"z/D");
 
-  G4double time, hours, minutes, seconds;
-
-  G4cout << "Real time: ";
-  time = Timer.GetRealElapsed();
-  hours = floor(time/3600.0);
-  if(hours>0){
-    G4cout << std::setprecision(0) << std::setw(2) 
-	   << hours << ":";
-    G4cout << std::setfill('0');
-  } else {
-    G4cout << std::setfill(' ');
-  }
-  minutes = floor(fmod(time,3600.0)/60.0);
-  if(minutes>0){
-    G4cout << std::setprecision(0) << std::setw(2) << minutes << ":";
-    G4cout << std::setfill('0');
-  } else {
-    G4cout << std::setfill(' ');
-  }
-  seconds = fmod(time,60.0);
-  if(seconds>0)
-    G4cout << std::setprecision(2) << std::setw(5) << seconds;
-  G4cout << std::setfill(' ');
-
-  G4cout << "   System time: ";
-  time = Timer.GetSystemElapsed();
-  hours = floor(time/3600.0);
-  if(hours>0){
-    G4cout << std::setprecision(0) << std::setw(2) 
-	   << hours << ":";
-    G4cout << std::setfill('0');
-  } else {
-    G4cout << std::setfill(' ');
-  }
-  minutes = floor(fmod(time,3600.0)/60.0);
-  if(minutes>0){
-    G4cout << std::setprecision(0) << std::setw(2) << minutes << ":";
-    G4cout << std::setfill('0');
-  } else {
-    G4cout << std::setfill(' ');
-  }
-  seconds = fmod(time,60.0);
-  if(seconds>0)
-    G4cout << std::setprecision(2) << std::setw(5) << seconds;
-  G4cout << std::setfill(' ');
-
-  G4cout << "   User time: ";
-  time = Timer.GetUserElapsed();
-  hours = floor(time/3600.0);
-  if(hours>0){
-    G4cout << std::setprecision(0) << std::setw(2) 
-	   << hours << ":";
-    G4cout << std::setfill('0');
-  } else {
-    G4cout << std::setfill(' ');
-  }
-  minutes = floor(fmod(time,3600.0)/60.0);
-  if(minutes>0){
-    G4cout << std::setprecision(0) << std::setw(2) << minutes << ":";
-    G4cout << std::setfill('0');
-  } else {
-    G4cout << std::setfill(' ');
-  }
-  seconds = fmod(time,60.0);
-  if(seconds>0)
-    G4cout << std::setprecision(2) << std::setw(5) << seconds;
-  G4cout << std::setfill(' ');
-
-  G4cout << "   "
-	 << evaction->GetNTotalevents()/Timer.GetRealElapsed()
-	 << " events/s" << G4endl;
- 
+//   ebranch = t->Branch("px",&px,"px/D");
+//   ebranch = t->Branch("py",&py,"py/D");
+//   ebranch = t->Branch("pz",&pz,"pz/D");
+//
+  if(G4VVisManager::GetConcreteInstance())
+   {
+     G4UImanager::GetUIpointer()->ApplyCommand("/vis~/clear/view");
+     G4UImanager::GetUIpointer()->ApplyCommand("/vis~/draw/current");
+   }
 }
+
+
+void RunAction::EndOfRunAction(const G4Run* aRun)
+{
+  G4cout << "Run " << aRun->GetRunID() << " ended." << G4endl;
+
+  if(G4VVisManager::GetConcreteInstance())
+   {
+     G4UImanager::GetUIpointer()->ApplyCommand("/vis~/show/view");
+   }
+
+  t->Write(); //write the tree to file
+}
+
+
+
+
+
+
+
+
+
+
+
 

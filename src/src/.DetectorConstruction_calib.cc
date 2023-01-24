@@ -41,8 +41,6 @@
 #include "G4ios.hh"
 #include <stdio.h>
 
-using namespace CLHEP;
-
 DetectorConstruction::DetectorConstruction()
   : NaI(0), Al(0), N78O21Ar1(0), Cr20Ni8Fe76(0), C2F4(0), Si(0), Cu3Zn2(0), SiO2(0), elCu(0), C2H3Cl(0), vacuum(0), cardboard(0), plastic(0)
 {
@@ -252,7 +250,7 @@ G4VPhysicalVolume* DetectorConstruction::ConstructDetector()
 
 //..........BEAM PIPE................
   G4double outerR_beam = 20.6375*mm;                   //edit this to change the radius of the beam pipe
-  G4double innerR_beam = outerR_beam-0.889*mm-0.0*mm;      //edit this to change the thickness of the beam pipe
+  G4double innerR_beam = outerR_beam-0.889*mm;      //edit this to change the thickness of the beam pipe
   G4double halflength_beam = 341.0*mm;              //edit this to change the length of the beam pipe
   G4double startAngle_beam = 0.*deg;
   G4double spanAngle_beam = 360.*deg;
@@ -261,7 +259,7 @@ G4VPhysicalVolume* DetectorConstruction::ConstructDetector()
 
   G4LogicalVolume* beam_log = new G4LogicalVolume(beam_tube,Al,"beam_log",0,0,0);
 
-  G4VPhysicalVolume* beam_phys = new G4PVPlacement(0,G4ThreeVector(0.0*mm,0.0*mm,0.0*mm),beam_log,"beam_phys",room_log,false,0);
+  G4VPhysicalVolume* beam_phys = new G4PVPlacement(0,G4ThreeVector(0.0*mm,0.0*mm,100.0*mm),beam_log,"beam_phys",room_log,false,0);
 
 
 //.........DIMENSIONS OF SuN..........           **(changing these will scale the whole simulation)**
@@ -686,7 +684,7 @@ for (int i=1; i<=4; i++)
  
   G4VPhysicalVolume* dssd_phys = new G4PVPlacement(0, G4ThreeVector(0.0*mm, 0.0*mm, z_disp), dssd_log, "dssd_phys", room_log, false, 0);
 */
-  G4VPhysicalVolume* cardboard_phys = new G4PVPlacement(0, G4ThreeVector(0.0*mm, 0.0*mm, -10*mm), cardboard_log, "cardboard_phys", room_log, false, 0);
+  G4VPhysicalVolume* cardboard_phys = new G4PVPlacement(0, G4ThreeVector(0.0*mm, 0.0*mm, 0.1*mm), cardboard_log, "cardboard_phys", room_log, false, 0);
  
 
 //  detectorName[8] = "dssd_phys";
