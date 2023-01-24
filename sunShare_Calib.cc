@@ -12,6 +12,7 @@
 #include "EventAction.hh"
 #include "SteppingAction.hh"
 #include "SuNBetaDecay.hh"
+#include "PhysicsList.hh"
 
 #include <fstream>
 #include <iostream>
@@ -78,6 +79,8 @@ int main(int argc, char** argv)
   // set mandatory initialization classes
   DetectorConstruction *Det = new DetectorConstruction;
   runManager->SetUserInitialization(Det);
+  PhysicsList *physicsList = new PhysicsList(Det);
+  runManager->SetUserInitialization(physicsList);
   runManager->SetUserInitialization(new QGSP_BIC_HP);
 
   #ifdef G4VIS_USE
