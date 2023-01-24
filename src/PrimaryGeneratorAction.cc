@@ -1,5 +1,7 @@
 #include "PrimaryGeneratorAction.hh"
 
+using namespace CLHEP;
+
 PrimaryGeneratorAction::PrimaryGeneratorAction(DetectorConstruction *detector, Incoming_Beam* BI, Outgoing_Beam* BO): BeamIn(BI), BeamOut(BO), myDetector(detector)
 {
   SetInBeam();
@@ -68,21 +70,21 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 	{
 	  if(sourceType == "muon") // Cosmic-ray background
 	    {
-	      // Cosmic rays with a uniform distribution on a
-	      // circle with diameter covering the crystals. 
-	      // Maybe.
-	      G4double x = 28.*cm*(1.0 - 2*G4UniformRand());
-	      G4double z = sqrt(28.*cm*28.*cm - x*x)*(1.0 - 2*G4UniformRand());
-	      particleGun->SetParticlePosition(G4ThreeVector(x, myDetector->GetBGSphereRmin(), z));
-	      // Vertical for now. Eventually implement cos^2 distribution
-	      particleGun->SetParticleMomentumDirection(G4ThreeVector(0,-1,0));
+//	      // Cosmic rays with a uniform distribution on a
+//	      // circle with diameter covering the crystals. 
+//	      // Maybe.
+//	      G4double x = 28.*cm*(1.0 - 2*G4UniformRand());
+//	      G4double z = sqrt(28.*cm*28.*cm - x*x)*(1.0 - 2*G4UniformRand());
+//	      particleGun->SetParticlePosition(G4ThreeVector(x, myDetector->GetBGSphereRmin(), z));
+//	      // Vertical for now. Eventually implement cos^2 distribution
+//	      particleGun->SetParticleMomentumDirection(G4ThreeVector(0,-1,0));
 	    }
 	  else // Room background
 	    {
 	      G4ThreeVector v1, v2;
 	      // Inside the background sphere walls.
-	      G4double bgRmin = myDetector->GetBGSphereRmin();
-	      G4double bgRmax = myDetector->GetBGSphereRmax();
+	      G4double bgRmin = 0; //myDetector->GetBGSphereRmin();
+	      G4double bgRmax = 0; //myDetector->GetBGSphereRmax();
 	      v1 = G4RandomDirection()*(bgRmin + 20.0*cm +
 					G4UniformRand()*(bgRmax -
 							 bgRmin - 20.0*cm));  
@@ -182,24 +184,24 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
       //Reactions in the target
 
       // This works in general ...
-      TT = myDetector->GetTarget()->DistanceToIn(position, direction);
-      TT = myDetector->GetTarget()->DistanceToOut(position+TT*direction, 
-						  direction);
-      TT *= direction.getZ();
+//      TT = myDetector->GetTarget()->DistanceToIn(position, direction);
+//      TT = myDetector->GetTarget()->DistanceToOut(position+TT*direction, 
+//						  direction);
+//      TT *= direction.getZ();
 
       // ... but this may be faster, and approximately correct for 
       // a flat target.
       //	  TT= myDetector->GetTargetThickness();
 
-      TC=myDetector->GetTargetPos()->getZ();
-      depth=TC+TT*(G4UniformRand()-0.5);
+//      TC=myDetector->GetTargetPos()->getZ();
+//      depth=TC+TT*(G4UniformRand()-0.5);
 
       //    G4cout<< "- Target Thickness is  "<<TT/mm<<" mm"<<G4endl;
       //    G4cout<< "- Target Center is at  "<<TC/mm<<" mm"<<G4endl;
       //    G4cout<< "- Reaction depth   at  "<<depth/mm<<" mm"<<G4endl;
       //    G4cout<< "- Direction is  "<<direction<<G4endl;
 
-      myDetector->setTargetReactionDepth(depth);
+//      myDetector->setTargetReactionDepth(depth);
 
     }
 
@@ -220,9 +222,10 @@ void PrimaryGeneratorAction::SetSourceOnTargetFace()
 {
   sourcePosition.setX(0);
   sourcePosition.setY(0);
+  sourcePosition.setZ(0);
   //sourcePosition.setZ(-myDetector->GetTarget()->GetZHalfLength()+ //LR for LH
-  sourcePosition.setZ(-myDetector->GetTargetThickness()/2.0+
-	myDetector->GetTargetPlacement()->GetTranslation().getZ());
+//  sourcePosition.setZ(-myDetector->GetTargetThickness()/2.0+
+//	myDetector->GetTargetPlacement()->GetTranslation().getZ());
   particleGun->SetParticlePosition(sourcePosition);
 }
 
@@ -231,9 +234,10 @@ void PrimaryGeneratorAction::SetSourceOnTargetBack()
 {
   sourcePosition.setX(0);
   sourcePosition.setY(0);
+  sourcePosition.setZ(0);
   //sourcePosition.setZ(myDetector->GetTarget()->GetZHalfLength()+ //LR for LH
-  sourcePosition.setZ(myDetector->GetTargetThickness()/2.0+
-	myDetector->GetTargetPlacement()->GetTranslation().getZ());
+//  sourcePosition.setZ(myDetector->GetTargetThickness()/2.0+
+//	myDetector->GetTargetPlacement()->GetTranslation().getZ());
   particleGun->SetParticlePosition(sourcePosition);
 }
 

@@ -404,8 +404,8 @@ void PhysicsList::AddRadioactiveDecay()
 
 void PhysicsList::GetRange(G4double val)
 {
-  //  G4LogicalVolume* lBox = fDet->GetWorld()->GetLogicalVolume();
-  G4LogicalVolume* lBox = fDet->HallLog();
+/*  //  G4LogicalVolume* lBox = fDet->GetWorld()->GetLogicalVolume();
+//  G4LogicalVolume* lBox = fDet->HallLog();
   G4ParticleTable* particleTable =  G4ParticleTable::GetParticleTable();
   const G4MaterialCutsCouple* couple = lBox->GetMaterialCutsCouple();
   const G4Material* currMat = lBox->GetMaterial();
@@ -418,6 +418,7 @@ void PhysicsList::GetRange(G4double val)
   G4cout << "particle : " << part->GetParticleName()  << G4endl;
   G4cout << "energy   : " << G4BestUnit(val,"Energy") << G4endl;
   G4cout << "range    : " << G4BestUnit(cut,"Length") << G4endl;
+*/
 }
 
 void PhysicsList::SetGammaAngularCorrelations(bool val){

@@ -1,5 +1,7 @@
 #include "Gretina_NSCL_Shell.hh"
 
+using namespace CLHEP;
+
 Gretina_NSCL_Shell::Gretina_NSCL_Shell()
 {
 
@@ -267,7 +269,7 @@ void Gretina_NSCL_Shell::HalfShell(G4String half)
   else
     Pos.setX(-southOffset);
 
-  new G4PVPlacement(0, Pos, half+"MountingShell", logicShell, theDetector->HallPhys(), false, 0 );
+//  new G4PVPlacement(0, Pos, half+"MountingShell", logicShell, theDetector->HallPhys(), false, 0 );
 
   G4VisAttributes *pVA = new G4VisAttributes( G4Colour(0.0, 1.0, 1.0) );
   logicShell->SetVisAttributes( pVA );

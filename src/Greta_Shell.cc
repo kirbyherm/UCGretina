@@ -1,5 +1,7 @@
 #include "Greta_Shell.hh"
 
+using namespace CLHEP;
+
 Greta_Shell::Greta_Shell()
 {
 
@@ -330,7 +332,7 @@ void Greta_Shell::HalfShell(G4String half)
   else
     Pos.setX(-southOffset);
 
-  new G4PVPlacement(0, Pos, half+"MountingShell", logicShell, theDetector->HallPhys(), false, 0 );
+//  new G4PVPlacement(0, Pos, half+"MountingShell", logicShell, theDetector->HallPhys(), false, 0 );
 
   G4VisAttributes *pVA = new G4VisAttributes( G4Colour(0.0, 1.0, 1.0) );
   logicShell->SetVisAttributes( pVA );
